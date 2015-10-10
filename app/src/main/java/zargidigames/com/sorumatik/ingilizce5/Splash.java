@@ -1,6 +1,7 @@
 package zargidigames.com.sorumatik.ingilizce5;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,15 +14,16 @@ public class Splash extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
 
         Thread thread = new Thread() {
             public void run() {
                 try {
-                    sleep(3000);
+                    sleep(5000);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 } finally {
@@ -42,5 +44,11 @@ public class Splash extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
     }
 }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center_vertical|center_horizontal">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/alert_bitti">
+
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:rowCount="1"
+            android:columnCount="2"
+            android:layout_gravity="center_horizontal|bottom"
+            android:padding="10dp">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/alert_btn_next"
+                android:background="@drawable/button_devam"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="12dp"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/alert_btn_restart"
+                android:background="@drawable/button_tekrar"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="12dp"/>
+        </GridLayout>
+
+
+    </FrameLayout>
+
+</RelativeLayout>

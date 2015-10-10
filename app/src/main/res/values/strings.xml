@@ -2,8 +2,38 @@
 <resources>
 
     <string name="app_name">Sorumatik : 5. Sınıf İngilizce</string>
+    <string name="copy_right">2015 ZARGIDI GAMES</string>
     <string name="hello_world">Hello world!</string>
+    <string name="activity_unit_select">Ünite seç!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_splash">Splash</string>
+    <string name="title_activity_splash">Merhaba!</string>
+    <string name="title_activity_unit">Haydi ünite seç!</string>
+    <string name="title_learn">Öğren: </string>
+    <string name="title_test">Test: </string>
+
+    <string name="msg_network_title">Bağlantı gerekiyor!</string>
+    <string name="msg_network_unconnect">Internet bağlantınız yok gözüküyor. Bağlantı ayarlarınızı kontrol ediniz.</string>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="loading_text_1">Yükleniyor...</string>
+    <string name="loading_text_2">Loading...</string>
+
+
+    <string name="alert_title_ok">Tamam</string>
+    <string name="alert_title_error">Hata!</string>
+
+    <string name="alert_positive_button">Tamam</string>
+    <string name="alert_negative_button">İptal</string>
+
+    <string name="connection_title_ok">Tamam</string>
+    <string name="connection_title_error">Hata!</string>
+
+    <string name="connection_text_ok">Internet bağlantınız var.</string>
+    <string name="connection_text_error">Internet bağlantınızı kontrol ediniz.</string>
+
+    <string name="unit_load_error_title_1">Opps!</string>
+    <string name="unit_load_error_text_1">Üniteler yüklenemedi.</string>
+
+    <string name="word_load_error_title_1">Opps!</string>
+    <string name="word_load_error_text_1">Kelimeler yüklenemedi.</string>
 
 </resources>
