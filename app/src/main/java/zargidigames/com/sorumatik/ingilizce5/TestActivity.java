@@ -4,12 +4,17 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
@@ -32,6 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -47,13 +54,17 @@ public class TestActivity extends ActionBarActivity {
 
     private boolean networkStatus = false;
     private boolean testIsReady = false;
-    private int wordIndex = 0;
-    private int wordMaxIndex = 0;
 
     private String unitType;
     private int unitId;
     private String unitName;
     private String barTitle;
+
+    private Word wordActive;
+    private Word wordRandom;
+    private int wordIndex = 0;
+    private int wordSize = 0;
+    private int wordMaxIndex = 0;
 
     private List<Word> words = new ArrayList<>();
     private TextToSpeech tts;
@@ -68,9 +79,8 @@ public class TestActivity extends ActionBarActivity {
     private ImageButton wordSoundLearn1;
     private ImageView wordResult1;
     private ImageView wordResult2;
-    private ImageButton wordBack;
-    private ImageButton wordNext;
-
+    private ImageButton wordBackButton;
+    private ImageButton wordNextButton;
 
     private LinearLayout contentLinearLayout1;
     private LinearLayout contentLinearLayout2;
@@ -79,14 +89,29 @@ public class TestActivity extends ActionBarActivity {
     private LinearLayout contentLinearLayout5;
 
     private MediaPlayer menuSound;
+    private MediaPlayer buttonSound;
+    private MediaPlayer answerCorrectSound;
+    private MediaPlayer answerWrongSound;
+    private MediaPlayer alertSound;
 
     private RelativeLayout alertRelativeLayout;
     private ImageView alertImageView;
+
+    private HashMap<Integer, Integer> userAnswers = new HashMap<>();
+    private int answerTrueRow = 0;
+    private int answerUserRow = 0;
+
+    private String wordTestRow1Text;
+    private String wordTestRow2Text;
+    private String wordLearnText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#AE1A20")));
 
         Intent intent = getIntent();
         unitType = intent.getStringExtra("UNIT_TYPE");
@@ -103,8 +128,8 @@ public class TestActivity extends ActionBarActivity {
         wordSoundLearn1 = (ImageButton) findViewById(R.id.ib_sound_learn_1);
         wordResult1 = (ImageView) findViewById(R.id.iv_result_1);
         wordResult2 = (ImageView) findViewById(R.id.iv_result_2);
-        wordBack = (ImageButton) findViewById(R.id.btn_back);
-        wordNext = (ImageButton) findViewById(R.id.btn_next);
+        wordBackButton = (ImageButton) findViewById(R.id.btn_back);
+        wordNextButton = (ImageButton) findViewById(R.id.btn_next);
 
         contentLinearLayout1 = (LinearLayout) findViewById(R.id.test_ll_c_1);
         contentLinearLayout2 = (LinearLayout) findViewById(R.id.test_ll_c_2);
@@ -115,15 +140,28 @@ public class TestActivity extends ActionBarActivity {
         alertRelativeLayout = (RelativeLayout) findViewById(R.id.alert_rl);
         alertImageView = (ImageView) findViewById(R.id.alert_iv);
 
+        buttonSound = MediaPlayer.create(this, R.raw.pope);
+        answerCorrectSound = MediaPlayer.create(this, R.raw.correct);
+        answerWrongSound = MediaPlayer.create(this, R.raw.wrong);
+        alertSound = MediaPlayer.create(this, R.raw.success);
+
+        wordTurkish.setAllCaps(false);
+        wordEnglish1.setAllCaps(false);
+        wordEnglish2.setAllCaps(false);
+
         checkActiveNetwork();
-        if (networkStatus) {
+        if (networkStatus && unitId > 0) {
             try {
                 getTests(unitId);
             } catch (JSONException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
                 showAlertDialog(getString(R.string.word_load_error_title_1), getString(R.string.word_load_error_text_1));
             }
+        }else{
+
+            showAlertDialog(getString(R.string.word_load_error_title_1), getString(R.string.word_load_error_text_1));
         }
+
         pbr.setProgress(0);
         pbr.setVisibility(View.VISIBLE);
 
@@ -138,6 +176,7 @@ public class TestActivity extends ActionBarActivity {
         setScreenElementSizes();
         loadSounds();
         loadAlertAnimation(2);
+
 
     }
 
@@ -155,6 +194,7 @@ public class TestActivity extends ActionBarActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //Ok
         } else {
+            showAndroidVersionToastMessage();
             wordSoundTest1.setVisibility(View.GONE);
             wordSoundTest2.setVisibility(View.GONE);
             wordSoundLearn1.setVisibility(View.GONE);
@@ -179,12 +219,18 @@ public class TestActivity extends ActionBarActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //Ok
         } else {
+            showAndroidVersionToastMessage();
             wordSoundTest1.setVisibility(View.GONE);
             wordSoundTest2.setVisibility(View.GONE);
             wordSoundLearn1.setVisibility(View.GONE);
         }
 
         setTitle(barTitle);
+    }
+
+    private void showAndroidVersionToastMessage() {
+
+        Toast.makeText(this, getString(R.string.text_to_speech_android_version_message), Toast.LENGTH_LONG).show();
     }
 
     public void startMainActivity() {
@@ -213,9 +259,12 @@ public class TestActivity extends ActionBarActivity {
                     testIsReady = true;
                     WordConverter wordConverter = new WordConverter(TestActivity.this);
                     words = wordConverter.jsonToWordArrayList(response);
+
                     pbr.setVisibility(View.GONE);
                     wordIndex = 0;
-                    wordMaxIndex = words.size() - 1;
+                    wordSize = words.size();
+                    wordMaxIndex = wordSize - 1;
+
                     loadWord(wordIndex);
 
                 } else {
@@ -232,28 +281,62 @@ public class TestActivity extends ActionBarActivity {
 
     public void loadWord(int index) {
 
-        if (index >= words.size()) {
+        if (index >= wordSize) {
             showFinisDialog();
         } else {
-            Word word = words.get(index);
+
+            wordActive = words.get(index);
+            wordRandom = getRandomWord(index);
+
+            answerUserRow = 0;
+            answerTrueRow = 0;
+            wordNextButton.setEnabled(true);
+            wordBackButton.setEnabled(true);
+            wordEnglish1.setEnabled(true);
+            wordEnglish2.setEnabled(true);
+            wordEnglish1.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#1f6fb8")));
+            wordEnglish2.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#1f6fb8")));
+            wordSoundTest1.setBackground(getResources().getDrawable(R.drawable.sound_girl_pasif));
+            wordSoundTest2.setBackground(getResources().getDrawable(R.drawable.sound_girl_pasif));
+            wordSoundLearn1.setBackground(getResources().getDrawable(R.drawable.sound_girl_pasif));
+            wordResult1.setBackground(getResources().getDrawable(R.drawable.icon_true));
+            wordResult2.setBackground(getResources().getDrawable(R.drawable.icon_true));
+            wordResult1.setVisibility(View.GONE);
+            wordResult2.setVisibility(View.GONE);
+
+
             if (unitType.equals("unit_test")) {
-                Word wordRandom = getRandomWord(index);
                 Random random = new Random();
                 if (random.nextBoolean()) {
-                    wordEnglish1.setText(word.english);
+                    wordEnglish1.setText(wordActive.english);
                     wordEnglish2.setText(wordRandom.english);
+
+                    wordTestRow1Text = wordActive.english;
+                    wordTestRow2Text = wordRandom.english;
+                    wordLearnText = wordRandom.english;
+
+                    answerTrueRow = 1;
                 } else {
                     wordEnglish1.setText(wordRandom.english);
-                    wordEnglish2.setText(word.english);
+                    wordEnglish2.setText(wordActive.english);
+
+                    wordTestRow2Text = wordActive.english;
+                    wordTestRow1Text = wordRandom.english;
+                    wordLearnText = wordRandom.english;
+
+                    answerTrueRow = 2;
                 }
 
-            } else {
-                wordEnglish1.setText(word.english);
-            }
-            wordTurkish.setText(word.turkish);
 
-            Picasso.with(this).load(word.image).placeholder(R.drawable.words_placeholder_image).error(R.drawable.words_placeholder_image_error).into(wordImage);
-            textToSpeech(word.english);
+            } else {
+                wordEnglish1.setText(wordActive.english);
+                wordLearnText = wordActive.english;
+                textToSpeech(wordActive.english);
+            }
+            wordTurkish.setText(wordActive.turkish);
+            Picasso.with(this).load(wordActive.image).placeholder(R.drawable.words_placeholder_image).error(R.drawable.words_placeholder_image_error).into(wordImage);
+
+
         }
 
 
@@ -261,7 +344,7 @@ public class TestActivity extends ActionBarActivity {
 
     private Word getRandomWord(int index) {
         int min = 0;
-        int max = words.size() - 1;
+        int max = wordMaxIndex;
         Random random = new Random();
         int randIndex = random.nextInt(max - min + 1) + min;
         if (randIndex != index) {
@@ -275,43 +358,129 @@ public class TestActivity extends ActionBarActivity {
         AlphaAnimation animButton = new AlphaAnimation(0.5F, 1.0F);
         animButton.setDuration(500);
         animButton.setStartOffset(100);
+        buttonSound.start();
+
         switch (v.getId()) {
             case R.id.btn_back:
-                wordBack.startAnimation(animButton);
-                if (wordIndex > 0) {
-                    wordIndex--;
+                wordBackButton.startAnimation(animButton);
+                if (unitType.equals("unit_test")) {
+                    if (answerUserRow == 0) {
+                        //loadAlertAnimation(4);
+                        return;
+                    } else {
+                        wordIndex--;
+                    }
+                } else {
+                    if (wordIndex > 0) {
+                        wordIndex--;
+                    }
                 }
+
+                loadWord(wordIndex);
                 break;
             case R.id.btn_next:
-                wordNext.startAnimation(animButton);
-                wordIndex++;
+                wordNextButton.startAnimation(animButton);
+
+                if (unitType.equals("unit_test")) {
+                    if (answerUserRow == 0) {
+                        loadAlertAnimation(4);
+                        return;
+                    } else {
+                        wordIndex++;
+                    }
+                } else {
+                    wordIndex++;
+                }
+
+
+                loadWord(wordIndex);
                 break;
         }
-        loadWord(wordIndex);
+
+
     }
 
 
-    public void tToSpeechButtonClicked(View v) {
-        String word = words.get(wordIndex).english;
+    public void checkUserAnswer(View v) {
         switch (v.getId()) {
-            case R.id.ib_sound_test_1:
-                textToSpeech(word);
+            case R.id.btn_word_english_1:
+                answerUserRow = 1;
+                if (unitType.equals("unit_test")) {
+                    if (answerTrueRow == answerUserRow) {
+                        answerCorrectSound.start();
+                        wordResult1.setBackground(getResources().getDrawable(R.drawable.icon_true));
+                        wordEnglish1.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#1EAC0D")));
+                        userAnswers.put(wordIndex, 1);
+                        showSuccesMessage();
+                    } else {
+                        answerWrongSound.start();
+                        wordResult1.setBackground(getResources().getDrawable(R.drawable.icon_false));
+                        wordEnglish1.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#DB1A1C")));
+                        userAnswers.put(wordIndex, 0);
+                    }
+                    wordResult1.setVisibility(View.VISIBLE);
+                }
+
                 break;
-            case R.id.ib_sound_test_2:
-                textToSpeech(word);
-                break;
-            case R.id.ib_sound_learn_1:
-                textToSpeech(word);
+            case R.id.btn_word_english_2:
+                answerUserRow = 2;
+                if (unitType.equals("unit_test")) {
+                    if (answerTrueRow == answerUserRow) {
+                        answerCorrectSound.start();
+                        wordResult2.setBackground(getResources().getDrawable(R.drawable.icon_true));
+                        wordEnglish2.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#1EAC0D")));
+                        userAnswers.put(wordIndex, 1);
+                        showSuccesMessage();
+                    } else {
+                        answerWrongSound.start();
+                        wordResult2.setBackground(getResources().getDrawable(R.drawable.icon_false));
+                        wordEnglish2.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#DB1A1C")));
+                        userAnswers.put(wordIndex, 0);
+                    }
+                    wordResult2.setVisibility(View.VISIBLE);
+                }
+
                 break;
         }
+
+        wordEnglish1.setEnabled(false);
+        wordEnglish2.setEnabled(false);
+
+    }
+
+    public void tToSpeechButtonClicked(View v) {
+
+
+        switch (v.getId()) {
+            case R.id.ib_sound_test_1:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    wordSoundTest1.setBackground(getResources().getDrawable(R.drawable.sound_girl_aktif));
+                }
+                textToSpeech(wordTestRow1Text);
+                break;
+            case R.id.ib_sound_test_2:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    wordSoundTest2.setBackground(getResources().getDrawable(R.drawable.sound_girl_aktif));
+                }
+                textToSpeech(wordTestRow2Text);
+                break;
+            case R.id.ib_sound_learn_1:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    wordSoundLearn1.setBackground(getResources().getDrawable(R.drawable.sound_girl_aktif));
+                }
+                textToSpeech(wordLearnText);
+                break;
+        }
+
+
 
     }
 
     //@TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public void textToSpeech(final String word) {
+    public void textToSpeech(final String text) {
 
-        if (word.equals("")) {
-            showAlertDialog("Hata", "Kelime bulunamadı");
+        if (text.equals("")) {
+            //showAlertDialog("Hata", "Kelime bulunamadı");
         } else {
             tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
                 @Override
@@ -319,23 +488,84 @@ public class TestActivity extends ActionBarActivity {
                     if (status != TextToSpeech.ERROR) {
                         tts.setLanguage(Locale.US);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            //showAlertDialog("Ok", word + "SDK " + Build.VERSION.SDK_INT + "----"+ Build.VERSION_CODES.LOLLIPOP);
-                            tts.speak(word, TextToSpeech.QUEUE_ADD, null, null);
-                        } else {
-                            //showAlertDialog("Hata", word + "SDK " + Build.VERSION.SDK_INT + "----"+ Build.VERSION_CODES.LOLLIPOP);
-                        }
 
+                            if(!tts.isSpeaking()){
+                                tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+                            }
+
+
+                            tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                                @Override
+                                public void onStart(String utteranceId) {
+
+                                }
+
+                                @Override
+                                public void onDone(String utteranceId) {
+
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                        wordSoundTest1.setBackground(getResources().getDrawable(R.drawable.sound_girl_pasif));
+                                        wordSoundTest2.setBackground(getResources().getDrawable(R.drawable.sound_girl_pasif));
+                                        wordSoundLearn1.setBackground(getResources().getDrawable(R.drawable.sound_girl_pasif));
+                                    }
+
+                                }
+
+                                @Override
+                                public void onError(String utteranceId) {
+
+                                }
+                            });
+
+                        }
                     }
                 }
+
+
             });
-            //tts.speak(word, TextToSpeech.QUEUE_FLUSH, null, null);
         }
 
     }
 
 
-    private void loadAlertAnimation(int aType) {
+    private void loadAlertAnimation(final int aType) {
 
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                // Actions to do after 1 seconds
+                loadAlertAnimationDelay(aType);
+            }
+        }, 1000);
+
+
+    }
+
+    private void showSuccesMessage() {
+        /**
+         * Son 9, 7, 5, 3 doğru cevaba göre mesaj göster
+         */
+        int lastTrueCount = 0;
+        for (int i = userAnswers.size() - 1; i >= 0; i--) {
+            if (1 == userAnswers.get(i)) {
+                lastTrueCount++;
+            }else{
+                break;
+            }
+        }
+
+        if (lastTrueCount >= 9) {
+            loadAlertAnimation(7);
+        } else if (lastTrueCount == 7) {
+            loadAlertAnimation(8);
+        } else if (lastTrueCount == 5) {
+            loadAlertAnimation(1);
+        } else if (lastTrueCount == 3) {
+            loadAlertAnimation(5);
+        }
+    }
+
+    private void loadAlertAnimationDelay(int aType){
         String alertFileName;
 
         switch (aType) {
@@ -371,6 +601,7 @@ public class TestActivity extends ActionBarActivity {
         int imageResourceId = getResources().getIdentifier(alertFileName, "drawable", getPackageName());
 
         if (imageResourceId > 0) {
+            alertSound.start();
             alertImageView.setImageResource(imageResourceId);
             alertImageView.setVisibility(View.VISIBLE);
 
@@ -388,7 +619,7 @@ public class TestActivity extends ActionBarActivity {
                 public void onAnimationEnd(Animation animation) {
                     AlphaAnimation animation2 = new AlphaAnimation(1.0F, 0.0F);
                     animation2.setDuration(500);
-                    animation2.setStartOffset(2000);
+                    animation2.setStartOffset(1500);
 
                     animation2.setAnimationListener(new Animation.AnimationListener() {
                         @Override
@@ -421,34 +652,6 @@ public class TestActivity extends ActionBarActivity {
         }
     }
 
-    private void showFinisDialog() {
-
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.alert_finish_test);
-
-        ImageButton buttonNext = (ImageButton) dialog.findViewById(R.id.alert_btn_next);
-        ImageButton buttonRestart = (ImageButton) dialog.findViewById(R.id.alert_btn_restart);
-
-        buttonNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        buttonRestart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        dialog.show();
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.argb(0, 200, 200, 200)));
-        dialog.setCanceledOnTouchOutside(false);
-
-    }
 
     private void setScreenElementSizes() {
 
@@ -499,5 +702,56 @@ public class TestActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return false;
+    }
+
+    private void showFinisDialog() {
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.alert_finish_test);
+
+        ImageButton buttonNext = (ImageButton) dialog.findViewById(R.id.alert_btn_next);
+        ImageButton buttonRestart = (ImageButton) dialog.findViewById(R.id.alert_btn_restart);
+
+        buttonNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buttonClickNext();
+            }
+        });
+
+        buttonRestart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                buttonClickRestart();
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.argb(0, 200, 200, 200)));
+        dialog.setCanceledOnTouchOutside(false);
+
+    }
+
+    public void buttonClickNext() {
+        Intent intent = new Intent(this, UnitActivity.class);
+        intent.putExtra("UNIT_TYPE", unitType);
+        startActivity(intent);
+    }
+
+
+    public void buttonClickRestart() {
+        wordIndex = 0;
+        userAnswers.clear();
+        if (unitType.equals("unit_learn")) {
+            loadScreenDefaultForLearn();
+        } else if (unitType.equals("unit_test")) {
+            loadScreenDefaultForTest();
+        }
+        setScreenElementSizes();
+        loadSounds();
+        loadAlertAnimation(2);
+        loadWord(wordIndex);
     }
 }

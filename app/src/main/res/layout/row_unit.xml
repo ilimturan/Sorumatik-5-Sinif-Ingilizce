@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/unit_row_image"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/unite_placeholder"/>
 
@@ -16,12 +16,13 @@
         android:id="@+id/unit_row_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Yükleniyor..."
         android:layout_marginTop="-10dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="10dp"
-        android:textColor="#044c8d"/>
+        android:textColor="#044c8d"
+        android:textStyle="bold"/>
 
 
 </LinearLayout>

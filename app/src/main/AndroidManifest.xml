@@ -35,7 +35,8 @@
         <activity
             android:name=".TestActivity"
             android:label="@string/title_activity_test"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

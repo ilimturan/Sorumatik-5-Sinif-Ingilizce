@@ -38,7 +38,7 @@ public class WordConverter {
                 word.image = jsonObject.getString("image");
                 words.add(word);
             } catch (JSONException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
 

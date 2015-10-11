@@ -9,8 +9,8 @@ public class AppConfig {
     public static String apiUrl = "http://zargidigames.com/index.php/sorumatikApi/";
     public static String apiKey = "543216789_sorumatik";
 
-    public static boolean screenSetSize = false;
-    public static int screenOrjWidth = 768;
-    public static int screenOrjHeight = 1280;
+    public static boolean screenSetSize = true;
+    public static int screenOrjWidth = 768; //540
+    public static int screenOrjHeight = 1280; //888
 
 }

@@ -3,8 +3,11 @@ package zargidigames.com.sorumatik.ingilizce5;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,6 +55,9 @@ public class UnitActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unit);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#AE1A20")));
+
         Intent intent = getIntent();
         unitType = intent.getStringExtra("UNIT_TYPE");
 
@@ -65,7 +71,7 @@ public class UnitActivity extends ActionBarActivity {
             try {
                 getUnits();
             } catch (JSONException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
                 showAlertDialog(getString(R.string.unit_load_error_title_1), getString(R.string.unit_load_error_text_1));
             }
         }

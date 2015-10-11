@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -50,6 +52,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#AE1A20")));
         actionBar.hide();
 
         menuRelativeLayout1 = (RelativeLayout) findViewById(R.id.mm_rl_1);
@@ -60,7 +63,6 @@ public class MainActivity extends ActionBarActivity {
         menuImageView2 = (ImageView) findViewById(R.id.mm_iv_2);
         menuBtnLearn = (ImageButton) findViewById(R.id.mm_btn_learn);
         menuBtnTest = (ImageButton) findViewById(R.id.mm_btn_test);
-        setScreenElementSizes();
 
         menuAnimationZoomIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.menu_zoom_in_1);
         menuAnimationZoomOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.menu_zoom_out_1);
@@ -83,6 +85,8 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void mainMenuButtonClick(View v) {
+        checkActiveNetwork();
+        if(!networkStatus) return;
         switch (v.getId()) {
             case R.id.mm_btn_learn:
                 startUnitActivity("unit_learn");
@@ -99,34 +103,6 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this, UnitActivity.class);
         intent.putExtra("UNIT_TYPE", unitType);
         startActivity(intent);
-    }
-
-    private void setScreenElementSizes() {
-
-        if(!AppConfig.screenSetSize) return;
-
-        Screen screenInfo = new Screen(this);
-        double oWidth = (double) screenInfo.screenWidthPixels / AppConfig.screenOrjWidth;
-        double oHeight = (double) screenInfo.screenHeightPixels / AppConfig.screenOrjHeight;
-        double oWidthHeight = oWidth / oHeight;
-
-        menuImageView1.getLayoutParams().width = (int) (menuImageView1.getLayoutParams().width * oWidth);
-        menuImageView1.getLayoutParams().height = (int) (menuImageView1.getLayoutParams().height * oWidth);
-
-        menuImageView2.getLayoutParams().width = (int) (menuImageView2.getLayoutParams().width * oWidth);
-        menuImageView2.getLayoutParams().height = (int) (menuImageView2.getLayoutParams().height * oWidth);
-
-        menuLinearLayout1.getLayoutParams().width = (int) (menuLinearLayout1.getLayoutParams().width * oWidth);
-        menuLinearLayout1.getLayoutParams().height = (int) (menuLinearLayout1.getLayoutParams().height * oWidth);
-
-        menuBtnLearn.getLayoutParams().width = (int) (menuBtnLearn.getLayoutParams().width * oWidth);
-        menuBtnLearn.getLayoutParams().height = (int) (menuBtnLearn.getLayoutParams().height * oWidth);
-        //TODO set margins
-
-        menuBtnTest.getLayoutParams().width = (int) (menuBtnTest.getLayoutParams().width * oWidth);
-        menuBtnTest.getLayoutParams().height = (int) (menuBtnTest.getLayoutParams().height * oWidth);
-        //TODO set margins
-
     }
 
 

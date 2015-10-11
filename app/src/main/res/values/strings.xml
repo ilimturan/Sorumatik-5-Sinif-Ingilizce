@@ -6,17 +6,15 @@
     <string name="hello_world">Hello world!</string>
     <string name="activity_unit_select">Ünite seç!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_splash">Merhaba!</string>
+    <string name="title_activity_splash">Sorumatik : 5. Sınıf İngilizce!</string>
     <string name="title_activity_unit">Haydi ünite seç!</string>
     <string name="title_learn">Öğren: </string>
     <string name="title_test">Test: </string>
-
-    <string name="msg_network_title">Bağlantı gerekiyor!</string>
-    <string name="msg_network_unconnect">Internet bağlantınız yok gözüküyor. Bağlantı ayarlarınızı kontrol ediniz.</string>
     <string name="title_activity_test">TestActivity</string>
+
     <string name="loading_text_1">Yükleniyor...</string>
     <string name="loading_text_2">Loading...</string>
-
+    <string name="text_to_speech_android_version_message">Kelimelerin İngilizce seslendirme özelliği için Android 5.0 ve üzeri gerekiyor.</string>
 
     <string name="alert_title_ok">Tamam</string>
     <string name="alert_title_error">Hata!</string>
@@ -25,10 +23,10 @@
     <string name="alert_negative_button">İptal</string>
 
     <string name="connection_title_ok">Tamam</string>
-    <string name="connection_title_error">Hata!</string>
+    <string name="connection_title_error">Bağlantı gerekiyor!</string>
 
     <string name="connection_text_ok">Internet bağlantınız var.</string>
-    <string name="connection_text_error">Internet bağlantınızı kontrol ediniz.</string>
+    <string name="connection_text_error">Internet bağlantınız yok gözüküyor. Bağlantı ayarlarınızı kontrol ediniz.</string>
 
     <string name="unit_load_error_title_1">Opps!</string>
     <string name="unit_load_error_text_1">Üniteler yüklenemedi.</string>

@@ -22,18 +22,27 @@
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/alert_btn_next"
-                android:background="@drawable/button_devam"
+                android:id="@+id/alert_btn_restart"
+                android:background="@drawable/button_tekrar"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="12dp"/>
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="32dp"
+                android:layout_marginBottom="12dp"
+                />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/alert_btn_restart"
-                android:background="@drawable/button_tekrar"
+                android:id="@+id/alert_btn_next"
+                android:background="@drawable/button_devam"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="12dp"/>
+                android:layout_marginLeft="32dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginBottom="12dp"
+                />
+
         </GridLayout>
 
 

@@ -38,7 +38,7 @@ public class UnitConverter {
                 units.add(unit);
 
             } catch (JSONException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
 

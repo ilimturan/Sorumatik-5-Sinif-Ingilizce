@@ -55,7 +55,6 @@ public class UnitAdapter extends BaseAdapter {
         rowUnitView = mInflater.inflate(R.layout.row_unit, null);
         TextView textView = (TextView) rowUnitView.findViewById(R.id.unit_row_text);
         ImageView imageView = (ImageView) rowUnitView.findViewById(R.id.unit_row_image);
-        setImageViewSize(imageView);
 
         Unit unit = unitList.get(position);
 
@@ -66,17 +65,5 @@ public class UnitAdapter extends BaseAdapter {
         return rowUnitView;
     }
 
-    private void setImageViewSize(ImageView imageView) {
 
-        if(!AppConfig.screenSetSize) return;
-
-        Screen screenInfo = new Screen(activity);
-        double oWidth = (double) screenInfo.screenWidthPixels / AppConfig.screenOrjWidth;
-        double oHeight = (double) screenInfo.screenHeightPixels / AppConfig.screenOrjHeight;
-        double oWidthHeight = oWidth / oHeight;
-
-        imageView.getLayoutParams().width = (int) (imageView.getLayoutParams().width * oWidth);
-        imageView.getLayoutParams().height = (int) (imageView.getLayoutParams().height * oWidth);
-
-    }
 }
