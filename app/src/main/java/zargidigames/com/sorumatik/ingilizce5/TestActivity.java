@@ -662,8 +662,12 @@ public class TestActivity extends ActionBarActivity {
         double oHeight = (double) screenInfo.screenHeightPixels / AppConfig.screenOrjHeight;
         double oWidthHeight = oWidth / oHeight;
 
-        wordImage.getLayoutParams().width = (int) (wordImage.getLayoutParams().width * oWidth);
-        wordImage.getLayoutParams().height = (int) (wordImage.getLayoutParams().height * oWidth);
+        int checkHeight = (int) (wordImage.getLayoutParams().height * oWidth);
+        if(checkHeight < AppConfig.screenOrjHeight / 2){
+            wordImage.getLayoutParams().width = (int) (wordImage.getLayoutParams().width * oWidth);
+            wordImage.getLayoutParams().height = (int) (wordImage.getLayoutParams().height * oWidth);
+        }
+
 
     }
 
