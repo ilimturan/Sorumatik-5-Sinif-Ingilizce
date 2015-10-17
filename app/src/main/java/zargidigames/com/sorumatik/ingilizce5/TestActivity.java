@@ -14,7 +14,6 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -296,11 +295,11 @@ public class TestActivity extends ActionBarActivity {
             wordEnglish2.setEnabled(true);
             wordEnglish1.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#1f6fb8")));
             wordEnglish2.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#1f6fb8")));
-            wordSoundTest1.setBackground(getResources().getDrawable(R.drawable.sound_girl_pasif));
-            wordSoundTest2.setBackground(getResources().getDrawable(R.drawable.sound_girl_pasif));
-            wordSoundLearn1.setBackground(getResources().getDrawable(R.drawable.sound_girl_pasif));
-            wordResult1.setBackground(getResources().getDrawable(R.drawable.icon_true));
-            wordResult2.setBackground(getResources().getDrawable(R.drawable.icon_true));
+            wordSoundTest1.setBackgroundResource(R.drawable.sound_girl_pasif);
+            wordSoundTest2.setBackgroundResource(R.drawable.sound_girl_pasif);
+            wordSoundLearn1.setBackgroundResource(R.drawable.sound_girl_pasif);
+            wordResult1.setBackgroundResource(R.drawable.icon_true);
+            wordResult2.setBackgroundResource(R.drawable.icon_true);
             wordResult1.setVisibility(View.GONE);
             wordResult2.setVisibility(View.GONE);
 
@@ -408,13 +407,13 @@ public class TestActivity extends ActionBarActivity {
                 if (unitType.equals("unit_test")) {
                     if (answerTrueRow == answerUserRow) {
                         answerCorrectSound.start();
-                        wordResult1.setBackground(getResources().getDrawable(R.drawable.icon_true));
-                        wordEnglish1.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#1EAC0D")));
+                        wordResult1.setBackgroundResource(R.drawable.icon_true);
+                        wordEnglish1.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#558B2F")));
                         userAnswers.put(wordIndex, 1);
                         showSuccesMessage();
                     } else {
                         answerWrongSound.start();
-                        wordResult1.setBackground(getResources().getDrawable(R.drawable.icon_false));
+                        wordResult1.setBackgroundResource(R.drawable.icon_false);
                         wordEnglish1.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#DB1A1C")));
                         userAnswers.put(wordIndex, 0);
                     }
@@ -427,13 +426,13 @@ public class TestActivity extends ActionBarActivity {
                 if (unitType.equals("unit_test")) {
                     if (answerTrueRow == answerUserRow) {
                         answerCorrectSound.start();
-                        wordResult2.setBackground(getResources().getDrawable(R.drawable.icon_true));
-                        wordEnglish2.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#1EAC0D")));
+                        wordResult2.setBackgroundResource(R.drawable.icon_true);
+                        wordEnglish2.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#558B2F")));
                         userAnswers.put(wordIndex, 1);
                         showSuccesMessage();
                     } else {
                         answerWrongSound.start();
-                        wordResult2.setBackground(getResources().getDrawable(R.drawable.icon_false));
+                        wordResult2.setBackgroundResource(R.drawable.icon_false);
                         wordEnglish2.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#DB1A1C")));
                         userAnswers.put(wordIndex, 0);
                     }
@@ -454,19 +453,19 @@ public class TestActivity extends ActionBarActivity {
         switch (v.getId()) {
             case R.id.ib_sound_test_1:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    wordSoundTest1.setBackground(getResources().getDrawable(R.drawable.sound_girl_aktif));
+                    wordSoundTest1.setBackgroundResource(R.drawable.sound_girl_aktif);
                 }
                 textToSpeech(wordTestRow1Text);
                 break;
             case R.id.ib_sound_test_2:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    wordSoundTest2.setBackground(getResources().getDrawable(R.drawable.sound_girl_aktif));
+                    wordSoundTest2.setBackgroundResource(R.drawable.sound_girl_aktif);
                 }
                 textToSpeech(wordTestRow2Text);
                 break;
             case R.id.ib_sound_learn_1:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    wordSoundLearn1.setBackground(getResources().getDrawable(R.drawable.sound_girl_aktif));
+                    wordSoundLearn1.setBackgroundResource(R.drawable.sound_girl_aktif);
                 }
                 textToSpeech(wordLearnText);
                 break;
@@ -489,10 +488,7 @@ public class TestActivity extends ActionBarActivity {
                         tts.setLanguage(Locale.US);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-                            if(!tts.isSpeaking()){
-                                tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
-                            }
-
+                            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
 
                             tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                                 @Override
@@ -504,9 +500,9 @@ public class TestActivity extends ActionBarActivity {
                                 public void onDone(String utteranceId) {
 
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                                        wordSoundTest1.setBackground(getResources().getDrawable(R.drawable.sound_girl_pasif));
-                                        wordSoundTest2.setBackground(getResources().getDrawable(R.drawable.sound_girl_pasif));
-                                        wordSoundLearn1.setBackground(getResources().getDrawable(R.drawable.sound_girl_pasif));
+                                        wordSoundTest1.setBackgroundResource(R.drawable.sound_girl_pasif);
+                                        wordSoundTest2.setBackgroundResource(R.drawable.sound_girl_pasif);
+                                        wordSoundLearn1.setBackgroundResource(R.drawable.sound_girl_pasif);
                                     }
 
                                 }
@@ -536,7 +532,7 @@ public class TestActivity extends ActionBarActivity {
                 // Actions to do after 1 seconds
                 loadAlertAnimationDelay(aType);
             }
-        }, 1000);
+        }, 500);
 
 
     }
@@ -607,7 +603,7 @@ public class TestActivity extends ActionBarActivity {
 
             AlphaAnimation animation1 = new AlphaAnimation(0.0F, 1.0F);
             animation1.setDuration(500);
-            animation1.setStartOffset(500);
+            animation1.setStartOffset(100);
 
             animation1.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -619,7 +615,7 @@ public class TestActivity extends ActionBarActivity {
                 public void onAnimationEnd(Animation animation) {
                     AlphaAnimation animation2 = new AlphaAnimation(1.0F, 0.0F);
                     animation2.setDuration(500);
-                    animation2.setStartOffset(1500);
+                    animation2.setStartOffset(1000);
 
                     animation2.setAnimationListener(new Animation.AnimationListener() {
                         @Override

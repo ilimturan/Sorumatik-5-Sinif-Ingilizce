@@ -1,8 +1,5 @@
 package zargidigames.com.sorumatik.ingilizce5.zapi;
 
-import android.content.Context;
-import android.util.Log;
-
 import com.loopj.android.http.*;
 
 import zargidigames.com.sorumatik.ingilizce5.config.AppConfig;

@@ -5,6 +5,11 @@ package zargidigames.com.sorumatik.ingilizce5.config;
  */
 public class AppConfig {
 
+    /**
+     * That is shit bro
+     * Why appId and classId are not same
+     */
+
     /*
     2.sınıf id = 8
     3.sınıf id = 9
@@ -14,7 +19,7 @@ public class AppConfig {
     7.sınıf id = 13
     8.sınıf id = 12
     */
-
+    public static int classId = 5;
     public static int appId = 11;
     public static String apiUrl = "http://zargidigames.com/index.php/sorumatikApi/";
     public static String apiKey = "543216789_sorumatik";

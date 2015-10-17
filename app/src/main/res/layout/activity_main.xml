@@ -28,8 +28,7 @@
             android:id="@+id/mm_iv_2"
             android:layout_below="@+id/mm_iv_1"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/zg_5"
-            android:layout_marginTop="-40dp"/>
+            android:layout_marginTop="-30dp"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -89,12 +88,6 @@
             android:gravity="center_vertical|center_horizontal"
             android:textColor="#ffffff"/>
     </RelativeLayout>
-
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="right|center_vertical">
-    </TableLayout>
 
 
 </FrameLayout>

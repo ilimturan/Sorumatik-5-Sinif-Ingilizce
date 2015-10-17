@@ -14,8 +14,6 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import zargidigames.com.sorumatik.ingilizce5.R;
-import zargidigames.com.sorumatik.ingilizce5.config.AppConfig;
-import zargidigames.com.sorumatik.ingilizce5.zlib.Screen;
 import zargidigames.com.sorumatik.ingilizce5.zapi.models.Unit;
 
 /**

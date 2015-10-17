@@ -21,7 +21,7 @@
         android:layout_marginTop="-10dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="10dp"
-        android:textColor="#044c8d"
+        android:textColor="#AE1A20"
         android:textStyle="bold"/>
 
 

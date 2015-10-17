@@ -45,6 +45,7 @@ public class UnitActivity extends ActionBarActivity {
     private ListView unitList;
 
     private Animation menuAnimationZoomIn;
+    private Animation menuAnimationZoomOut;
     private Animation btnAnimation;
 
     private MediaPlayer menuSound;
@@ -63,6 +64,7 @@ public class UnitActivity extends ActionBarActivity {
 
         unitList = (ListView) findViewById(R.id.unit_list);
         menuAnimationZoomIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.menu_zoom_in_1);
+        menuAnimationZoomOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.menu_zoom_out_1);
         btnAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.btn_vibration_1);
 
         checkActiveNetwork();
@@ -108,7 +110,8 @@ public class UnitActivity extends ActionBarActivity {
                     unitList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            view.setAnimation(menuAnimationZoomIn);
+                            //view.setAnimation(menuAnimationZoomIn);
+                            //view.setAnimation(menuAnimationZoomOut);
                             Unit selectedUnit = units.get(position);
                             startTestActivity(selectedUnit);
                         }

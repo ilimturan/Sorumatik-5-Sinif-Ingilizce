@@ -22,7 +22,6 @@ import android.widget.RelativeLayout;
 
 import zargidigames.com.sorumatik.ingilizce5.config.AppConfig;
 import zargidigames.com.sorumatik.ingilizce5.zlib.Network;
-import zargidigames.com.sorumatik.ingilizce5.zlib.Screen;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -73,6 +72,14 @@ public class MainActivity extends ActionBarActivity {
         menuBtnLearn.startAnimation(btnAnimation);
         btnAnimation.setDuration(413);
         menuBtnTest.startAnimation(btnAnimation);
+
+        int imageResourceId = getResources().getIdentifier("zg_"+ AppConfig.classId, "drawable", getPackageName());
+        if(imageResourceId > 0){
+            menuImageView2.setBackgroundResource(imageResourceId);
+        }else{
+            menuImageView2.setVisibility(View.GONE);
+        }
+
 
         context = getApplicationContext();
         checkActiveNetwork();
