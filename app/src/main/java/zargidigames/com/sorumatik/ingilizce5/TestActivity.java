@@ -539,7 +539,7 @@ public class TestActivity extends ActionBarActivity {
 
     private void showSuccesMessage() {
         /**
-         * Son 9, 7, 5, 3 doğru cevaba göre mesaj göster
+         * Son 28, 19, 12, 7 doğru cevaba göre mesaj göster
          */
         int lastTrueCount = 0;
         for (int i = userAnswers.size() - 1; i >= 0; i--) {
@@ -550,13 +550,13 @@ public class TestActivity extends ActionBarActivity {
             }
         }
 
-        if (lastTrueCount >= 9) {
+        if (lastTrueCount == 28) {
             loadAlertAnimation(7);
-        } else if (lastTrueCount == 7) {
+        } else if (lastTrueCount == 19) {
             loadAlertAnimation(8);
-        } else if (lastTrueCount == 5) {
+        } else if (lastTrueCount == 12) {
             loadAlertAnimation(1);
-        } else if (lastTrueCount == 3) {
+        } else if (lastTrueCount == 7) {
             loadAlertAnimation(5);
         }
     }
@@ -660,8 +660,8 @@ public class TestActivity extends ActionBarActivity {
 
         int checkHeight = (int) (wordImage.getLayoutParams().height * oWidth);
         if(checkHeight < AppConfig.screenOrjHeight / 2){
-            wordImage.getLayoutParams().width = (int) (wordImage.getLayoutParams().width * oWidth);
-            wordImage.getLayoutParams().height = (int) (wordImage.getLayoutParams().height * oWidth);
+            wordImage.getLayoutParams().width = (int) (wordImage.getLayoutParams().width * oWidth  * 1.3);
+            wordImage.getLayoutParams().height = (int) (wordImage.getLayoutParams().height * oWidth * 1.3);
         }
 
 

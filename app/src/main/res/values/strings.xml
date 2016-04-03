@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">İngilizce 5</string>
-    <string name="copy_right">2015 ZARGIDI GAMES</string>
+    <string name="copy_right">2016 ZARGIDI GAMES</string>
     <string name="hello_world">Merhaba!</string>
     <string name="activity_unit_select">Ünite seç!</string>
     <string name="action_settings">Ayarlar</string>
@@ -13,7 +13,7 @@
 
     <string name="loading_text_1">Yükleniyor...</string>
     <string name="loading_text_2">Loading...</string>
-    <string name="text_to_speech_android_version_message">Kelimelerin İngilizce seslendirme özelliği için Android 5.0 ve üzeri gerekiyor.</string>
+    <string name="text_to_speech_android_version_message">Seslendirme özelliği için Android 5.0 ve üzeri gerekiyor.</string>
 
     <string name="alert_title_ok">Tamam</string>
     <string name="alert_title_error">Hata!</string>
